@@ -74,11 +74,11 @@ def download_ipfs_binary(os_name, version, build_dir):
     download_url = ""
     
     if os_name == "Linux":
-        download_url = f"https://dist.ipfs.tech/kubo/{version}/kubo_{version}_linux-amd64.tar.gz"
+        download_url = f"https://github.com/ipfs/kubo/releases/download/{version}/kubo_{version}_linux-amd64.tar.gz"
     elif os_name == "Windows":
-        download_url = f"https://dist.ipfs.tech/kubo/{version}/kubo_{version}_windows-amd64.zip"
+        download_url = f"https://github.com/ipfs/kubo/releases/download/{version}/kubo_{version}_windows-amd64.zip"
     elif os_name == "Darwin":  # MacOS
-        download_url = f"https://dist.ipfs.tech/kubo/{version}/kubo_{version}_darwin-amd64.tar.gz"
+        download_url = f"https://github.com/ipfs/kubo/releases/download/{version}/kubo_{version}_darwin-amd64.tar.gz"
     else:
         raise ValueError("Unsupported operating system")
 
@@ -166,6 +166,65 @@ def clone_and_build(repo_url, branch_name, os_name):
         subprocess.run(build_command, check=True)
         
         print("Build completed successfully.")
+
+    except subprocess.CalledProcessError as e:
+        print(f"Command '{' '.join(e.cmd)}' failed with return code {e.returncode}.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+# def clone_and_build(repo_url, branch_name, os_name):
+#     try:
+#         # Clone the repository
+#         # print(f"Cloning repository from {repo_url}...")
+#         # subprocess.run(["git", "clone", repo_url], check=True)
+
+#         # Extract the repo name from the URL
+#         repo_name = os.path.basename(repo_url).replace(".git", "")
+
+#         # Change directory into the cloned repository
+#         os.chdir(repo_name)
+#         # print(f"Changed directory to {repo_name}")
+
+#         # Checkout the specified branch
+#         # print(f"Checking out branch {branch_name}...")
+#         # subprocess.run(["git", "checkout", branch_name], check=True)
+
+#         # Determine the build command based on the operating system
+#         if os_name == "Windows":
+#             build_command = ["make", "compile-windows"]
+#         elif os_name == "Linux":
+#             build_command = ["make", "compile-linux"]
+#         elif os_name == "Darwin":  # macOS
+#             build_command = ["make", "compile-mac"]
+#         else:
+#             raise ValueError(f"Unsupported OS: {os_name}")
+
+#         # Run the build command
+#         print(f"Running build command: {' '.join(build_command)}...")
+#         subprocess.run(build_command, check=True)
+        
+#         print("Build completed successfully.")
+
+#     except subprocess.CalledProcessError as e:
+#         print(f"Command '{' '.join(e.cmd)}' failed with return code {e.returncode}.")
+#     except Exception as e:
+#         print(f"An error occurred: {e}")
+
+def clone_and_install(repo_url):
+    try:
+        # Clone the repository
+        print(f"Cloning repository from {repo_url}...")
+        subprocess.run(["git", "clone", repo_url], check=True)
+
+        # Extract the repo name from the URL
+        repo_name = os.path.basename(repo_url).replace(".git", "")
+        # Change directory into the cloned repository
+        os.chdir(repo_name)
+        print(f"Changed directory to {repo_name}")
+         # Run the install command
+        
+        subprocess.run("make install", check=True)
+        
+        print("rubix-nexus installed successfully.")
 
     except subprocess.CalledProcessError as e:
         print(f"Command '{' '.join(e.cmd)}' failed with return code {e.returncode}.")

@@ -5,7 +5,7 @@ from app.app_config import update_config
 
 
 def run_non_quorum_nodes(n_nodes):
-    start_idx = 5
+    start_idx = 7
     quorum_config = get_quorum_config()
 
     non_quorum_config = setup_rubix_nodes(start_idx, start_idx + n_nodes - 1)
@@ -22,7 +22,7 @@ def run_non_quorum_nodes(n_nodes):
         fund_did_with_rbt(config_param, user_did)
         fund_did_with_rbt(config_param, deployer_did)
 
-        update_config(user_did=user_did, non_quorum_node_address="http://localhost:20005")
+        update_config(user_did=user_did, non_quorum_node_address="http://localhost:20007")
         add_quorums(non_quorum_config, node_key)
     
         for _, val in quorum_config.items():

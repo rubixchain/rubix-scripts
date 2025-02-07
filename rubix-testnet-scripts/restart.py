@@ -14,7 +14,7 @@ if __name__=='__main__':
     print("Current current working dir: ", os.getcwd())
 
     quorum_list_file = os.path.join(os.getcwd(), "rubixgoplatform", build_folder, "quorumlist.json")
-    quorum_node_indices = [0, 1, 2, 3, 4]
+    quorum_node_indices = [0, 1, 2, 3, 4,5,6]
 
     # Run Quorum nodes
     for idx in quorum_node_indices:
@@ -27,8 +27,10 @@ if __name__=='__main__':
         print(f"Quorum node {idx} is running on {server} is running successfully")
     
     # Run Non-Quorum node
-    cmd_run_rubix_servers("node5", 5)
-    print(f"Non-Quorum node is running successfully")
+    cmd_run_rubix_servers("node7", 7)
+    print(f"Non-Quorum node7 is running successfully")
+    cmd_run_rubix_servers("node8", 8)
+    print(f"Non-Quorum node8 is running successfully")
 
     # Run Setup Quorum
     with open(quorum_list_file, "r") as f:
