@@ -38,6 +38,11 @@ python3 shutdown.py
 ```
 - **For Windows:**
 ```sh
+python3 shutdown.py
+
+```
+- **For Windows:**
+```sh
 python shutdown.py
 
 ```
