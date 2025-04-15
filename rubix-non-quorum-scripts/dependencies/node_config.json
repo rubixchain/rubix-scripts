@@ -1,0 +1,11 @@
+{
+    "dids": {
+        "user_did": {
+            "did": "bafybmihdcy4tqo53eibtogsa5va4v4jdah5zbpe7wyqao45seuhidx2cr4",
+            "did_type": 4
+        }
+    },
+    "server": 20000,
+    "grpcPort": 10500,
+    "peerId": "12D3KooWKh4bZe9tbgL5ERUAHLLRKC2LkdMe1zTmVKWBHtVdKgAW"
+}

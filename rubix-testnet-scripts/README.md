@@ -30,6 +30,13 @@ This script stops all currently running Rubix nodes.
 
 #### **Usage:**
 Run this script when you want to shut down the nodes.
+
+- **For Linux/MacOS:**
+```sh
+python3 shutdown.py
+
+```
+- **For Windows:**
 ```sh
 python3 shutdown.py
 
@@ -45,7 +52,6 @@ This script restarts the nodes previously initiated by run.py.
 
 #### Usage:
 Run this script after shutting down the nodes to restart them.
-
 - **For Linux/MacOS:**
 ```sh
 python3 restart.py
