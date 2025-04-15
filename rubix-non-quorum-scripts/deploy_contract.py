@@ -21,7 +21,10 @@ def deploy_contract(deployer_did, server_port=20000):
 
     subscribe_smart_contract(contract_hash, server_port, 10500)
 
-    app_config = get_config()
+    print(f"Smart contract {contract_hash} has been deployed")
+    save_to_config_file(script_dir,"smart_contract_details.json", {
+        "contract_hash": contract_hash
+    })
     
     # Register Dapp Callback URLs
     register_callback_url("http://localhost:20000",contract_hash, "/api/callback")
@@ -45,7 +48,11 @@ def register_callback_url(rubix_node_url, contract_hash, callback_url_endpoint):
     print(f"Callback url {callback_url} has been registered")
 
 if __name__=='__main__':
-    node_config = load_from_config_file("node_config.json")
+    print(f"script_did {script_dir}")  # Get the directory of the script
+    dependencies_dir = os.path.join(script_dir, "dependencies")
+    print(f"config_dir: {dependencies_dir}")  # Get the directory of the script
+    node_config_path = os.path.join(dependencies_dir, "node_config.json")
+    node_config = load_from_config_file(node_config_path)
     print("node_config: ", node_config)
     # Extract the DID value
     did_value = node_config['dids']['user_did']['did']

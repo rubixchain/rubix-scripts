@@ -1,6 +1,5 @@
 from prerequisite import clone_and_build, get_os_info, \
-    generate_ipfs_swarm_key, download_ipfs_binary
-from node.quorum import run_quorum_nodes
+     download_ipfs_binary
 from node.non_quorum import run_non_quorum_nodes
 from node.actions import setup_rubix_nodes, create_and_register_did, fund_did_with_rbt
 from app.app_config import update_config

@@ -14,7 +14,7 @@ if __name__=='__main__':
 
     print("Current current working dir: ", os.getcwd())
 
-    quorum_list_file = os.path.join(os.getcwd(), "rubixgoplatform", build_folder, "quorumlist.json")
+    # quorum_list_file = os.path.join(os.getcwd(), "rubixgoplatform", build_folder, "quorumlist.json")
     quorum_node_indices = [0]
 
     # Run Quorum nodes

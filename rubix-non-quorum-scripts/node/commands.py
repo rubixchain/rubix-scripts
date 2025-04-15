@@ -373,11 +373,11 @@ def cmd_deploy_smart_contract(contract_hash, deployer_did, server_port, grpc_por
         raise Exception("Error occurred while run the command: " + cmd_string)
     os.chdir("../../")
 
-def cmd_execute_smart_contract(contract_hash, executor_did, server_port, grpc_port):
+def cmd_execute_smart_contract(contract_hash, executor_did,smart_contract_data, server_port, grpc_port ):
     os.chdir(os.path.join(os.getcwd(), "rubixgoplatform", get_build_dir()))
-    cmd_string = f"./rubixgoplatform executesmartcontract -sct {contract_hash} -transType 2 -executorAddr {executor_did} -rbtAmount 2 -port {server_port} -grpcPort {grpc_port}"
+    cmd_string = f"./rubixgoplatform executesmartcontract -sct {contract_hash} -transType 2 -executorAddr {executor_did} -sctData {smart_contract_data} -rbtAmount 2 -port {server_port} -grpcPort {grpc_port}"
     if is_windows_os():
-        cmd_string = f".\\rubixgoplatform executesmartcontract -sct {contract_hash} -transType 2 -executorAddr {executor_did} -rbtAmount 2 -port {server_port} -grpcPort {grpc_port}"
+        cmd_string = f".\\rubixgoplatform executesmartcontract -sct {contract_hash} -transType 2 -executorAddr {executor_did} -sctData {smart_contract_data} -rbtAmount 2 -port {server_port} -grpcPort {grpc_port}"
     output, code = run_command(cmd_string, True)
     print(output)
     

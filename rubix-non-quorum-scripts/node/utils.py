@@ -16,18 +16,24 @@ def get_base_ports():
 def get_did_by_alias(node_config, alias):
     return node_config["dids"][alias]["did"]
 
-def save_to_config_file(config_file_path, config):
+def save_to_config_file(base_dir, config_file_name, config):
+    print(f"Saving config to {config_file_name}...")
+    print(f"Base directory: {base_dir}")
     try:
-        if os.path.exists(config_file_path):
-            os.remove(config_file_path)
+        # Build the full path based on the base directory
+        config_file_path = os.path.join(base_dir, "dependencies", config_file_name)
         
+        # Ensure the parent directory exists
+        parent_dir = os.path.dirname(config_file_path)
+        if not os.path.exists(parent_dir):
+            os.makedirs(parent_dir)
+
+        # Write the config to the file
         with open(config_file_path, 'w') as f:
             json.dump(config, f, indent=4)
-    except FileNotFoundError as e:
-        raise FileNotFoundError(f"Error: The file at {config_file_path} could not be found.") from e
     except PermissionError as e:
         raise PermissionError(f"Error: Permission denied when trying to write to {config_file_path}.") from e
-    except TypeError as e:  # JSON serialization errors raise TypeError, not JSONDecodeError
+    except TypeError as e:
         raise TypeError(f"Error: Failed to serialize the config data to JSON.") from e
     except Exception as e:
         raise Exception(f"An unexpected error occurred: {e}") from e

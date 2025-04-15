@@ -2,7 +2,7 @@ import json
 import os
 from .commands import cmd_run_rubix_servers, cmd_get_peer_id, cmd_create_did, cmd_register_did, \
     cmd_generate_rbt, cmd_add_quorum_dids, cmd_setup_quorum_dids, get_build_dir, cmd_add_peer_details, \
-    cmd_generate_smart_contract, cmd_deploy_smart_contract, cmd_subscribe_smart_contract
+    cmd_generate_smart_contract, cmd_deploy_smart_contract, cmd_subscribe_smart_contract, cmd_execute_smart_contract
 from .utils import get_node_name_from_idx, get_did_by_alias, save_to_config_file
 
 def generate_smart_contract(wasm_file_path, code_file_path, state_file_path, deployer_did, server_port, grpc_port):
@@ -10,8 +10,8 @@ def generate_smart_contract(wasm_file_path, code_file_path, state_file_path, dep
 
 def deploy_smart_contract(contract_hash, deployer_did, server_port, grpc_port):
     return cmd_deploy_smart_contract(contract_hash, deployer_did, server_port, grpc_port)
-def execute_smart_contract(contract_hash, executor_did, server_port, grpc_port):
-    return cmd_execute_smart_contract(contract_hash, executor_did, server_port, grpc_port)
+def execute_smart_contract(contract_hash, executor_did,smart_contract_data, server_port, grpc_port):
+    return cmd_execute_smart_contract(contract_hash, executor_did,smart_contract_data, server_port, grpc_port)
 def subscribe_smart_contract(contract_hash, server_port, grpc_port):
     return cmd_subscribe_smart_contract(contract_hash, server_port, grpc_port)
 
@@ -38,29 +38,6 @@ def setup_quorums(node_config: dict, node_did_alias_map: dict):
             config["server"],
             config["grpcPort"],
         )
-
-def quorum_config(node_config: dict, node_did_alias_map: dict, skip_adding_quorums: bool = False, quorum_list_file_name = "quorumlist.json"):
-    # Prepare quorumlist.json
-    quorum_list = []
-    build_dir = get_build_dir()
- 
-    if skip_adding_quorums:
-        setup_quorums(node_config, node_did_alias_map)
-    else:
-        for node, config in node_config.items():
-            did = get_did_by_alias(config, node_did_alias_map[node])
-            quorum_info = {
-                "type": 2,
-                "address": did
-            }
-            
-            quorum_list.append(quorum_info)
-
-        save_to_config_file(quorum_list_file_name, quorum_list)
-        print("quorum saved to ", quorum_list_file_name)
-        add_quorums(node_config)
-
-        setup_quorums(node_config, node_did_alias_map)
 
 
 def setup_testnet_node(idx):
@@ -101,6 +78,8 @@ def fetch_peer_id(config):
     config["peerId"] = peer_id
 
 def create_and_register_did(config: dict, did_alias: str, did_type: int = 4, register_did: bool = True, fp: bool = False):
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    parent_dir = os.path.dirname(script_dir)
     if fp:
         print(f"creating did with fp flag")
         did = cmd_create_did(config["server"], config["grpcPort"], did_type, "p123", "q123")
@@ -112,7 +91,7 @@ def create_and_register_did(config: dict, did_alias: str, did_type: int = 4, reg
         if register_did:
             cmd_register_did(did, config["server"], config["grpcPort"],"p123")
             print(f"DID {did} has been registered successfully")
-        save_to_config_file("node_config.json", config)
+        save_to_config_file(parent_dir,"node_config.json", config)
         return did
     else:
         did = cmd_create_did(config["server"], config["grpcPort"], did_type)
@@ -125,7 +104,7 @@ def create_and_register_did(config: dict, did_alias: str, did_type: int = 4, reg
         if register_did:
             cmd_register_did(did, config["server"], config["grpcPort"])
             print(f"DID {did} has been registered successfully")
-        save_to_config_file("node_config.json", config)
+        save_to_config_file(parent_dir,"node_config.json", config)
         return did
 
 def fund_did_with_rbt(node_config: dict, did: str,  rbt_amount: int = 70, priv_pwd="mypassword"):
