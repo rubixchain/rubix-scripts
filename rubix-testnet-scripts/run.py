@@ -13,7 +13,7 @@ if __name__=='__main__':
     complete_binary_path = os.path.join(os.path.abspath("./rubixgoplatform"), build_folder)
 
     # Clone and build Rubixgoplatform
-    clone_and_build("https://github.com/rubixchain/rubixgoplatform.git", "development", os_name)
+    clone_and_build("https://github.com/rubixchain/rubixgoplatform.git", "main", os_name)
 
     github_file_url = "https://raw.githubusercontent.com/rubixchain/rubixgoplatform/main/testswarm.key"
     get_test_swarm_key(github_file_url,complete_binary_path)
