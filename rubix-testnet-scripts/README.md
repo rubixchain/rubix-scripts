@@ -520,21 +520,3 @@ for port in {20000..20004}; do
   curl -s http://localhost:$port/api/getalldid || echo "Not responding"
 done
 ```
-
-## 🔄 Migration from Old Scripts
-
-If you're using the old `run.py`, `shutdown.py`, `restart.py`:
-
-**Old way:**
-- Hardcoded node counts and ports
-- Manual editing of Python files
-- No state tracking
-
-**New way:**
-- Configure everything in `config.yaml`
-- Environment variable overrides
-- State management and recovery
-
-**To migrate:**
-1. Edit `config.yaml` to match your old setup
-2. Run `python setup.py`
