@@ -110,7 +110,7 @@ def setup_quorum_nodes(node_mgr: RubixNodeManager, config, paths: PathManager):
         # Get peer ID
         peer_id = node_mgr.get_peer_id(i)
 
-        # Create DID (type 4 for quorum, not registered)
+        # Create DID (type 4 for quorum)
         did = node_mgr.create_did(i, did_type=4, did_alias="did_quorum")
 
         # Fund DID
@@ -167,6 +167,8 @@ def setup_non_quorum_nodes(node_mgr: RubixNodeManager, config, paths: PathManage
 
     logger.info(f"Starting {non_quorum_count} non-quorum nodes...")
 
+    non_quorum_dids = []
+
     for i in range(non_quorum_count):
         node_idx = quorum_count + i
         logger.info(f"\n--- Non-Quorum Node {node_idx} ---")
@@ -174,14 +176,12 @@ def setup_non_quorum_nodes(node_mgr: RubixNodeManager, config, paths: PathManage
         # Start node
         node_mgr.start_node(node_idx)
 
-        # Create and register deployer DID
+        # Create deployer DID (will register later)
         deployer_did = node_mgr.create_did(node_idx, did_type=4, did_alias="did_deployer")
-        node_mgr.register_did(node_idx, deployer_did)
         node_mgr.fund_did(node_idx, deployer_did, amount=70)
 
-        # Create and register user DID
+        # Create user DID (will register later)
         user_did = node_mgr.create_did(node_idx, did_type=4, did_alias="did_user")
-        node_mgr.register_did(node_idx, user_did)
         node_mgr.fund_did(node_idx, user_did, amount=70)
 
         # Add quorum list
@@ -201,7 +201,55 @@ def setup_non_quorum_nodes(node_mgr: RubixNodeManager, config, paths: PathManage
         logger.info(f"  Deployer DID: {deployer_did}")
         logger.info(f"  User DID: {user_did}")
 
+        # Store DIDs for later registration
+        non_quorum_dids.append({
+            "node_idx": node_idx,
+            "deployer_did": deployer_did,
+            "user_did": user_did
+        })
+
     logger.info(f"\n✓ All {non_quorum_count} non-quorum nodes are ready")
+
+    return non_quorum_dids
+
+
+def register_all_dids(node_mgr: RubixNodeManager, config, quorum_dids, non_quorum_dids):
+    """
+    Register all DIDs after all nodes are set up.
+
+    Args:
+        node_mgr: Node manager instance
+        config: Configuration instance
+        quorum_dids: List of quorum DIDs
+        non_quorum_dids: List of non-quorum DIDs
+    """
+    logger = get_logger()
+    log_section("Registering All DIDs")
+
+    # Register quorum DIDs
+    logger.info(f"Registering {len(quorum_dids)} quorum DIDs...")
+    for quorum in quorum_dids:
+        node_idx = quorum["node_idx"]
+        did = quorum["did"]
+        logger.info(f"[Node {node_idx}] Registering quorum DID: {did}")
+        node_mgr.register_did(node_idx, did)
+
+    # Register non-quorum DIDs
+    logger.info(f"\nRegistering non-quorum DIDs...")
+    for non_quorum in non_quorum_dids:
+        node_idx = non_quorum["node_idx"]
+
+        # Register deployer DID
+        deployer_did = non_quorum["deployer_did"]
+        logger.info(f"[Node {node_idx}] Registering deployer DID: {deployer_did}")
+        node_mgr.register_did(node_idx, deployer_did)
+
+        # Register user DID
+        user_did = non_quorum["user_did"]
+        logger.info(f"[Node {node_idx}] Registering user DID: {user_did}")
+        node_mgr.register_did(node_idx, user_did)
+
+    logger.info(f"\n✓ All DIDs registered successfully")
 
 
 def main():
@@ -274,7 +322,10 @@ def main():
         quorum_dids = setup_quorum_nodes(node_mgr, config, paths)
 
         # Setup non-quorum nodes
-        setup_non_quorum_nodes(node_mgr, config, paths, quorum_dids)
+        non_quorum_dids = setup_non_quorum_nodes(node_mgr, config, paths, quorum_dids)
+
+        # PHASE 3: Register all DIDs
+        register_all_dids(node_mgr, config, quorum_dids, non_quorum_dids)
 
         # Success!
         log_section("Setup Complete!")
