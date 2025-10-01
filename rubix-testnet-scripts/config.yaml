@@ -1,0 +1,47 @@
+# Rubix Testnet Node Configuration
+
+nodes:
+  quorum:
+    count: 5
+    start_port: 20000
+    start_grpc_port: 10500
+  non_quorum:
+    count: 2
+    start_port: 20005
+    start_grpc_port: 10505
+
+binaries:
+  rubixgoplatform:
+    repo: "https://github.com/rubixchain/rubixgoplatform.git"
+    branch: "main"
+  ipfs:
+    version: "v0.21.0"
+
+paths:
+  workspace: "./rubix-workspace"
+  binaries: "{workspace}/bin"
+  data: "{workspace}/data"
+  logs: "{workspace}/logs"
+  config: "{workspace}/config"
+
+timeouts:
+  node_startup: 40
+  http_request: 10
+  health_check_interval: 5
+  max_health_checks: 12
+  command_timeout: 60
+
+security:
+  allow_default_passwords: true  # Set to false for production environments
+  password_env_vars:
+    priv_pwd: "RUBIX_PRIV_PWD"
+    quorum_pwd: "RUBIX_QUORUM_PWD"
+  default_passwords:
+    priv_pwd: "mypassword"
+    quorum_pwd: "mypassword"
+
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR
+  format: "%(asctime)s [%(levelname)s] %(name)s: %(message)s"
+  file_enabled: true
+  console_enabled: true
